@@ -10,13 +10,7 @@ function setup() {
 	totalRows = int(height/gridUnit);
 	totalCols = int(width/gridUnit);
 
-  for (var i = 0; i < totalRows; i++) {
-	  var row = [];
-	  grid.push(row);
-	  for (var j = 0; j < totalCols; j++) {
-	  	row.push(null);
-	  }  	
-  }
+	generateGrid();
   updateGrid(newTileIndices(3));
 }
 
@@ -24,7 +18,7 @@ function draw() {
   background(220);
 
   for (var i = tiles.length - 1; i >= 0; i--) {
-	  tiles[i].draw();
+	  tiles[i].show();
   }
 }
 
@@ -112,11 +106,30 @@ function newTileIndices(numTiles) {
 	return shuffle(pool).slice(0, numTiles);
 }
 
+function randNum() {
+	var arr = [];
+	for (var i = 0; i < 9; i++) {
+		arr.push(2);
+	}
+	arr.push(4);
+	return shuffle(arr)[0];
+}
+
+function generateGrid() {
+  for (var i = 0; i < totalRows; i++) {
+	  var row = [];
+	  grid.push(row);
+	  for (var j = 0; j < totalCols; j++) {
+	  	row.push(null);
+	  }  	
+  }
+}
+
 function updateGrid(indices) {
 	  indices.forEach(function(tileIndex) {
   	var row = tileIndex[0];
   	var col = tileIndex[1];
-  	var tile = new Tile(2, row, col);
+  	var tile = new Tile(randNum(), row, col);
 
 	  tiles.push(tile);
 	  grid[row][col] = tile;
@@ -124,11 +137,9 @@ function updateGrid(indices) {
 }
 
 function* shuffle(array) {
+  var i = array.length;
 
-    var i = array.length;
-
-    while (i--) {
-        yield array.splice(Math.floor(Math.random() * (i+1)), 1)[0];
-    }
-
+  while (i--) {
+    yield array.splice(Math.floor(Math.random() * (i + 1)), 1)[0];
+  }
 }

@@ -4,14 +4,25 @@ function Tile(num, row, col) {
 	this.col 		= col;
 	this.merged = false;
 
-	this.draw = function () {
+	fills = {}
+	for (var i = 1; i < 15; i++) {
+		n = 2**i
+		var greyScale = i * 17
+		if (greyScale < 127) {
+			fills[n] = [color(greyScale), color(255)];
+		} else {
+			fills[n] = [color(greyScale), color(0)];
+		}
+	}
+
+	this.show = function () {
+
 		var numWidth = textWidth(num);
-		//console.log('**')
-		//console.log((col * gridUnit) + numWidth/2);
-		fill(0)
-		stroke(255)
+		
+		fill(fills[this.num][0])
+		stroke(fills[this.num][0])
 		rect(this.col * gridUnit, this.row * gridUnit, gridUnit, gridUnit);
-		fill(255);
+		fill(fills[this.num][1]);
 		textAlign(CENTER, CENTER);
 		textSize(int((gridUnit * 30)/80));
 		text(
