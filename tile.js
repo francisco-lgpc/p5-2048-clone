@@ -1,7 +1,8 @@
 function Tile(num, row, col) {
-	this.num = num;
-	this.row = row;
-	this.col = col;
+	this.num 		= num;
+	this.row 		= row;
+	this.col 		= col;
+	this.merged = false;
 
 	this.draw = function () {
 		var numWidth = textWidth(num);
@@ -21,11 +22,31 @@ function Tile(num, row, col) {
 		);
 	}
 
-	this.update = function (newRow, newCol) {
+	this.update = function (newRow, newCol, keyCode) {
 		grid[this.row][this.col] = null
-		grid[newRow][newCol] = this
-		this.row = newRow;
-		this.col = newCol;
+		var prev; 
+		if (keyCode === LEFT_ARROW) {
+			prev = grid[newRow][newCol - 1];
+		} else  if (keyCode === RIGHT_ARROW) {
+			prev = grid[newRow][newCol + 1];
+		} else  if (keyCode === UP_ARROW && grid[newRow - 1]) {			
+			prev = grid[newRow - 1][newCol];
+  	} else if (keyCode === DOWN_ARROW && grid[newRow + 1]	) {
+	  	prev = grid[newRow + 1][newCol];
+	  }
+  	if( 
+  		prev &&
+  		!prev.merged &&
+  		prev.num === this.num
+  	){
+  		tiles.splice(tiles.indexOf(this), 1)
+  		prev.doubleNum();
+  		prev.merged = true;
+  	} else {
+			grid[newRow][newCol] = this
+			this.row = newRow;
+			this.col = newCol;			
+		}
 	}
 
 	this.doubleNum = function() {
